@@ -13,6 +13,9 @@ import {medusaService} from "@/lib/services/medusa-backend";
 import {LineItem, Order} from "@medusajs/medusa";
 import DetailDialog from "@/components/templates/order-table/detail-dialog";
 import {IOrderAction} from "@/lib/hooks/use-order-action/order-actions";
+import {computeStatus, OrdersStatus} from "@/lib/constants/orders-status";
+import {format} from "date-fns";
+import {formatAmount} from "@/lib/utils";
 
 // Order available state changes
 const orderActions = [
@@ -72,7 +75,7 @@ const orderActions = [
 ]
 
 
-export const getColumns: (action: IOrderAction) => ColumnDef<Order>[] = (action) => {
+export const getColumns: (action?: IOrderAction) => ColumnDef<Order>[] = (action) => {
   return [
     {
       id: "select",
@@ -110,13 +113,14 @@ export const getColumns: (action: IOrderAction) => ColumnDef<Order>[] = (action)
         <DataTableColumnHeader column={column} title="Cliente"/>
       ),
       cell: ({row}) => {
-        const label = labels.find((label) => label.value === row.original.label)
+        //const label = labels.find((label) => label.value === row.original.label)
+        console.log('customer', row.original.customer)
 
         return (
           <div className="flex space-x-2">
-            {label && <Badge variant="outline">{label.label}</Badge>}
-            <span className="max-w-[500px] truncate font-medium w-[50px]">
-            {row.original.customer.first_name}
+            {/*{label && <Badge variant="outline">{label.label}</Badge>}*/}
+            <span className="max-w-[500px] font-medium w-[50px]">
+            {row.original.customer.first_name || 'Sin nombre'}
           </span>
           </div>
         )
@@ -128,9 +132,7 @@ export const getColumns: (action: IOrderAction) => ColumnDef<Order>[] = (action)
         <DataTableColumnHeader column={column} title="Status"/>
       ),
       cell: ({row}) => {
-        const status = statuses.find(
-          (status) => status.value === row.getValue("status")
-        )
+        const status = computeStatus(row.original);
 
         if (!status) {
           return null
@@ -138,16 +140,26 @@ export const getColumns: (action: IOrderAction) => ColumnDef<Order>[] = (action)
 
         return (
           <div className="flex w-[100px] items-center">
-            {status.icon && (
-              <status.icon className="mr-2 h-4 w-4 text-muted-foreground"/>
-            )}
-            <span>{status.label}</span>
+            {/*{status.icon && (*/}
+            {/*  <status.icon className="mr-2 h-4 w-4 text-muted-foreground"/>*/}
+            {/*)}*/}
+            {/*<span>{status.label}</span>*/}
+            <Badge variant="outline">{status.value}</Badge>
           </div>
         )
       },
       filterFn: (row, id, value) => {
         return value.includes(row.getValue(id))
       },
+    },
+    {
+      accessorKey: "price",
+      header: ({column}) => (
+        <DataTableColumnHeader column={column} title="Price"/>
+      ),
+      cell: ({row}) => {
+        return <div className="w-[150px]">{formatAmount(row.original.total, row.original.currency_code)}</div>
+      }
     },
     {
       accessorKey: "priority",
@@ -181,7 +193,10 @@ export const getColumns: (action: IOrderAction) => ColumnDef<Order>[] = (action)
       header: ({column}) => (
         <DataTableColumnHeader column={column} title="Time"/>
       ),
-      cell: ({row}) => <div className="w-[150px]">{row.original.created_at.toString()}</div>,
+      cell: ({row}) => {
+        const date = new Date(row.original.created_at)
+        return <div className="w-[150px]">{format(date, 'dd/MM/yyyy hh:mm:ss')}</div>
+      },
     },
     {
       id: "details",
@@ -195,7 +210,7 @@ export const getColumns: (action: IOrderAction) => ColumnDef<Order>[] = (action)
     {
       id: "defaultAction",
       cell: ({row}) =>
-        <Button size="sm"
+        action && <Button size="sm"
                 className="ml-1 w-[80px]"
                 onClick={() => action.onAction(row)}
         >{action.label}

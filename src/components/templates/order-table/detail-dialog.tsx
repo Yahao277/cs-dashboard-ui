@@ -8,6 +8,9 @@ import {
 } from "@/components/ui/dialog";
 import {PropsWithChildren} from "react";
 import {Order} from "@medusajs/medusa";
+import {formatAmount} from "@/lib/utils";
+import Thumbnail from "@/components/atoms/thumbnail";
+import LineItemCard from "@/components/templates/order-table/line-item-card";
 
 type Props = {
   details: Order
@@ -26,12 +29,8 @@ const DetailDialog = ({ details, children }: PropsWithChildren<Props>) => {
         </DialogHeader>
         <span>Pedidos:</span>
         <div>
-          {details.items.map(lineitem => (
-            <div key={lineitem.id}>
-              <span>{lineitem.title}</span>
-              <span>{lineitem.quantity}</span>
-              <span>{lineitem.unit_price}</span>
-            </div>
+          {details.items && details.items.map(lineitem => (
+            <LineItemCard lineItem={lineitem} key={lineitem.id}/>
           ))}
         </div>
       </DialogContent>

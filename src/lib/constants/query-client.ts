@@ -9,3 +9,7 @@ export const queryClient = new QueryClient({
     },
   },
 })
+
+export const queryIncludeFields = "total,created_at,currency_code";
+export const queryExpandFields = "customer,items.variant.options,items.variant.product.options";
+

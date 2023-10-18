@@ -5,10 +5,15 @@ import {getColumns} from "./columns";
 import {useAdminOrders} from "medusa-react";
 import {AdminGetOrdersParams} from "@medusajs/medusa";
 import {IOrderAction} from "@/lib/hooks/use-order-action/order-actions";
+import {useEffect} from "react";
 
 
-export default function OrderTable({ query, action }: { query?: AdminGetOrdersParams, action: IOrderAction }) {
+export default function OrderTable({ query, action }: { query?: AdminGetOrdersParams, action?: IOrderAction }) {
   const { orders, isLoading } = useAdminOrders(query);
+
+  useEffect(() => {
+    console.log(orders);
+  }, [orders]);
 
   const columns = getColumns(action);
 

@@ -12,3 +12,11 @@ export function capitalize(handle: string | string[]) {
     return handle.map((h) => h.charAt(0).toUpperCase() + h.slice(1));
   }
 }
+
+export function formatAmount(amount: number | null | undefined, currency: string) {
+  const _amount = amount || 0;
+  return new Intl.NumberFormat(undefined, {
+    style: "currency",
+    currency: currency,
+  }).format(_amount / 100);
+}

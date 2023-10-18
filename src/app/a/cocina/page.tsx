@@ -6,6 +6,10 @@ import {capitalize} from "@/lib/utils";
 import OrderTable from "@/components/templates/order-table";
 import {OrderAction} from "@/lib/hooks/use-order-action/order-actions";
 import {RefreshCw} from "lucide-react";
+import * as React from "react";
+import {DateRange} from "react-day-picker";
+import {addDays} from "date-fns";
+import {queryExpandFields, queryIncludeFields} from "@/lib/constants/query-client";
 
 const tabs = [
   {
@@ -24,13 +28,17 @@ const tabs = [
 
 const DashboardHandlePage = () => {
   const title = "Cocina";
+  const [date, setDate] = React.useState<DateRange | undefined>({
+    from: new Date(),
+    to: addDays(new Date(), 0),
+  })
 
   return (
     <>
       <div className="flex items-center justify-between space-y-2">
         <h2 className="text-3xl font-bold tracking-tight">{capitalize(title)}</h2>
         <div className="flex items-center space-x-2">
-          <CalendarDateRangePicker />
+          <CalendarDateRangePicker date={date} setDate={setDate}/>
           <Button><RefreshCw /></Button>
         </div>
       </div>
@@ -50,7 +58,13 @@ const DashboardHandlePage = () => {
             fulfillment_status: ['not_fulfilled'],
             payment_status: ['captured'],
             offset: 0,
-            limit: 100
+            limit: 100,
+              fields: queryIncludeFields,
+              expand: queryExpandFields,
+              created_at: {
+                gte: date?.from,
+                lte: date?.to
+              }
           }}/>
         </TabsContent>
         <TabsContent value="preparando" className="space-y-4">
@@ -59,6 +73,12 @@ const DashboardHandlePage = () => {
             query={{
             fulfillment_status: ['fulfilled'],
             payment_status: ['captured'],
+              created_at: {
+                gte: date?.from,
+                lte: date?.to
+              },
+              fields: queryIncludeFields,
+              expand: queryExpandFields,
             offset: 0,
             limit: 100
           }}/>
@@ -69,6 +89,12 @@ const DashboardHandlePage = () => {
             query={{
             fulfillment_status: ['shipped'],
             payment_status: ['captured'],
+              created_at: {
+                gte: date?.from,
+                lte: date?.to
+              },
+              fields: queryIncludeFields,
+              expand: queryExpandFields,
             offset: 0,
             limit: 100
           }}/>

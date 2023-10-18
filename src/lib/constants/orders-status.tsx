@@ -1,4 +1,6 @@
-export const OrdersStatus = {
+import {Order} from "@medusajs/medusa";
+
+export const OrdersStatus: Record<string, any> = {
   PENDING: {
     value: "Pendiente",
     conditions: {
@@ -35,5 +37,26 @@ export const OrdersStatus = {
       status: ["completed"]
     }
   }
+}
+
+export function computeStatus(order: Order) {
+  const payment = order.payment_status;
+  const fulfillment = order.fulfillment_status;
+  const status = order.status;
+
+  for (let key in OrdersStatus) {
+    const conditions = OrdersStatus[key].conditions;
+
+    if (
+      (conditions.payment ? conditions.payment.includes(payment) : true) &&
+      (conditions.fulfillment ? conditions.fulfillment.includes(fulfillment) : true) &&
+      (conditions.status ? conditions.status.includes(status) : true)
+    ) {
+      return OrdersStatus[key];
+    }
+  }
+
+  // If none of the statuses match, you can return a default value or undefined.
+  return OrdersStatus.PENDING;
 }
 

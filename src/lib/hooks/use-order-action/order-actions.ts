@@ -25,7 +25,7 @@ export const OrderAction = {
   },
   PAYMENT: {
     name: "payment",
-    label: "Pago",
+    label: "Cobrar",
     onAction: (row: Row<Order>) => {
       console.log("prepare")
       medusaService.admin.orders.capturePayment(row.original.id)
@@ -46,7 +46,7 @@ export const OrderAction = {
   },
   DELIVERY:   {
     name: "delivery",
-    label: "Finalizado",
+    label: "Entregado",
     onAction: (row: Row<Order>) => {
       console.log("delivered")
       medusaService.admin.orders.complete(row.original.id)
@@ -58,6 +58,7 @@ export const OrderAction = {
     label: "Cancelar",
     onAction: (row: Row<Order>) => {
       console.log("cancel")
+      // TODO: cancel order
       medusaService.admin.orders.list()
         .then((res: any) => console.log(res))
     }
