@@ -40,7 +40,7 @@ export const OrderAction = {
       if (row.original.fulfillments.length === 0) {
         return;
       }
-      medusaService.admin.order.createShipment(row.original.id, { fulfillment_id: row.original.fulfillments[0].id })
+      medusaService.admin.orders.createShipment(row.original.id, { fulfillment_id: row.original.fulfillments[0].id })
         .then((res: any) => console.log(res))
     }
   },
@@ -97,7 +97,7 @@ export const orderActions = [
       if (row.original.fulfillments.length === 0) {
         return;
       }
-      medusaService.admin.order.createShipment(row.original.id, { fulfillment_id: row.original.fulfillments[0].id })
+      medusaService.admin.orders.createShipment(row.original.id, { fulfillment_id: row.original.fulfillments[0].id })
         .then((res: any) => console.log(res))
     }
   },

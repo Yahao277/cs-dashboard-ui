@@ -3,8 +3,6 @@ import {CalendarDateRangePicker} from "@/components/molecules/date-range-picker"
 import {Button} from "@/components/ui/button";
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
 import {capitalize} from "@/lib/utils";
-import OverviewExample from "@/components/templates/overview-example";
-import TableExample from "@/components/templates/table-example";
 import OrderTable from "@/components/templates/order-table";
 import {OrderAction} from "@/lib/hooks/use-order-action/order-actions";
 import * as React from "react";

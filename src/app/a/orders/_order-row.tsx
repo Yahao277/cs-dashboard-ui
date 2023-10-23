@@ -85,7 +85,12 @@ const OrderRow = ({ order, onActionResponse }: { order: Order; onActionResponse:
         })
       });
     } else if (action === 'ready') {
-      ready( { fulfillment_id: order.fulfillments.length > 0 ? order.fulfillments[0].id : undefined})
+      if (order.fulfillments.length > 0) {
+        ready( { fulfillment_id: order.fulfillments[0].id })
+      } else {
+        console.error('No fulfillment found');
+        throw new Error('No fulfillment found');
+      }
     }
   }
 

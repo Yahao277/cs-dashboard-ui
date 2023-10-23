@@ -18,9 +18,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-//import { labels } from "@/lib/data/data"
-import { taskSchema } from "@/lib/data/schema"
-
 type RowAction<TData> = {
   label: string;
   name: string;
